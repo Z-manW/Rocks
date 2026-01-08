@@ -67,18 +67,23 @@ class Rock:
 
     
     def check_neglect(self):
+        """
+        Returns a message if something changes.
+        Only triggers hibernation after real neglect.
+        """
         time_ignored = time.time() - self.last_interaction
+        message = None
 
-        # 30 seconds = noticeable neglect (for testing)
-        if time_ignored > 30 and not self.is_hibernating:
-
+        # First warning: mood drifts due to neglect
+        if 30 < time_ignored <= 90:
             if random.random() < (1 - self.stability / 100):
                 self.mood = random.choice(["Bored", "Agitated", "Stressed"])
+                message = f"{self.name} seems a bit restless from neglect."
 
-            # Extreme neglect -> hibernating
-            if time_ignored > 90 and not self.is_hibernating:
-                self.is_hibernating = True
-                return "Pebble withdraws completely adn enters hibernation."
+        # Hibernation: only after 90+ seconds
+        if time_ignored > 90 and not self.is_hibernating:
+            self.is_hibernating = True
+            message = f"{self.name} withdraws completely and enters hibernation."
 
     def ambient_thought(self):
         if self.is_hibernating:
@@ -105,37 +110,34 @@ class Rock:
     def observe(self):
         if self.is_hibernating:
             return "Pebble does not respond. The rock is hibernating."
-
         self.last_interaction = time.time()
+        # Minimal bond increase
+        self.bond = min(100, self.bond + 1)
         return self.describe()
 
     def affirm(self):
         if self.is_hibernating:
             return "Pebble does not respond The rock is hibernating."
-
         self. last_interaction = time.time()
-        
+        # Temperament-sensitive bond/mood change
         if self.temperament == "Narcissistic":
-            self.bond += random.randint(3, 6)
+            self.bond = min(100, self.bond + random.randin(3, 6))
             return "Pebble seems pleased by the attention."
         elif self.temperament == "Argumentative":
             if random.random() < 0.4:
                 self.mood = "Agitated"
                 return "Pebble bristles at your attempt."
             else:
-                self.bond += 2
+                self.bond = min(100, self.bond + 2)
                 return "Pebble reluctantly accepts your affirmation."
-
         else:
-            self.bond += random.randint(1, 4)
+            self.bond = min(100, self.bond + random.randint(1, 4))
             return "Pebble seems to appreciate the gesture."
 
     def disturb(self):
         if self.is_hibernating:
             return "Pebble does not respond. The rock is hibernating."
-
         self.last_interaction = time.time()
-
         if random.random() < (self.stability / 120):
             return "Pebble remains unmoved."
         else:
@@ -145,7 +147,6 @@ class Rock:
     def attempt_wake(self):
         if not self.is_hibernating:
             return "Pebble is already awake."
-
         if random.random() < (self.bond / 200):
             self.is_hibernating = False
             self.mood = "Content"

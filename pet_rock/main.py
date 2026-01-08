@@ -4,11 +4,12 @@ import time
 rock = Rock("Pebble")
 
 while True:
+    # Check neglect and print any state changes
     message = rock.check_neglect()
     if message:
         print(message)
 
-
+    # Ambient thoughts
     thought = rock.ambient_thought()
     if thought:
         print(f"[ambient] {thought}")
@@ -35,6 +36,8 @@ while True:
         print(rock.attempt_wake())
     elif choice == "6":
         break
+    else:
+        print ("Invalid choice.")
 
     print("-" * 50)
-    time.sleep(4)
+    time.sleep(3)
