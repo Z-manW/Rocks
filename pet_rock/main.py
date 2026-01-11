@@ -22,19 +22,19 @@ while True:
     print("5. wake")
     print("6. quit")
 
-    choice = input("> ").strip()
+    choice = input("> ").strip().lower()
 
-    if choice == "1":
+    if choice in ("1", "observe"):
         print(rock.observe())
-    elif choice == "2":
+    elif choice in ("2", "affirm"):
         print(rock.affirm())
-    elif choice == "3":
+    elif choice in ("3", "disturb"):
         print(rock.disturb())
-    elif choice == "4":
+    elif choice in ("4", "wait"):
         print("You leave the rock alone.")
-    elif choice == "5":
+    elif choice in ("5", "wake"):
         print(rock.attempt_wake())
-    elif choice == "6":
+    elif choice in ("6", "quit"):
         break
     else:
         print ("Invalid choice.")
